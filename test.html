@@ -256,7 +256,7 @@ submit.addEventListener("click", handleSubmission);
 
 <script>
     // localStorage.setItem('username', 'JohnDoe');
-console.log(localStorage)
+// console.log(localStorage)
 make_test_link = document.getElementById("make-test")
 previous_test_link = document.getElementById("previous-test")
 delete_test_link = document.getElementById("delete-test")
@@ -316,19 +316,64 @@ function getValue() {
         }
     }
 
-function make_a_test_func(num_questions_, operand_) {
+
+
+function createTable(data) {
+  const table = document.createElement("table");
+  const thead = document.createElement("thead");
+  const tbody = document.createElement("tbody");
+
+  // Create table header
+  const headerRow = document.createElement("tr");
+  headerRow.innerHTML = "<th>Key</th><th>Values</th>";
+  thead.appendChild(headerRow);
+
+  // Create table rows for each key-value pair
+  for (const key in data) {
+    if (data.hasOwnProperty(key)) {
+      const valueArray = data[key];
+      const row = document.createElement("tr");
+      row.innerHTML = `<td>${key}</td><td>${valueArray.join(', ')}</td>`;
+      tbody.appendChild(row);
+    }
+  }
+
+  table.appendChild(thead);
+  table.appendChild(tbody);
+
+  return table;
+}
+
+function make_a_test_func(num_questions_, operand_, index, myArray) {
+
+    
+
+
+
+
     counter = document.getElementById("counter")
 
-    let results_array = {}
 
-console.log(localStorage)
-const myArray = { "questions":num_questions_, "operand": operand_, "result":{}};
 
-localStorage.setItem(`test`, JSON.stringify(myArray));
 
-const storedArray = JSON.parse(localStorage.getItem('myArray'));
+    if (myArray === 0) {
+        let results_array = {}
 
-console.log(localStorage)
+        myArray = { "questions":num_questions_, "operand": operand_, "result":results_array}
+        
+    }
+
+
+
+
+// console.log(localStorage)
+// const myArray = { "questions":num_questions_, "operand": operand_, "result":{}};
+
+// localStorage.setItem(`test`, JSON.stringify(myArray));
+
+// const storedArray = JSON.parse(localStorage.getItem('myArray'));
+
+// console.log(localStorage)
 
 
 // starting the test
@@ -342,10 +387,21 @@ console.log(localStorage)
 
 // }
 
-let index = 1;
+// let index = 1;
+
+
+num_questions_ = myArray["questions"]
+    operand_ = myArray["operand"]
+    results_array = myArray["result"]
+
+
+
 const num_questions = num_questions_; // Change this to the number of questions you want
 
 async function runQuestions() {
+
+
+
     while (index <= num_questions) {
         counter.textContent = `${index}/${num_questions}`;
         resetUI("+");
@@ -363,14 +419,50 @@ async function runQuestions() {
 
         index++;
     }
+
+
+
+    let trueCount = 0;
+
+    for (const key in results_array) {
+    const array = results_array[key];
+    if (array.length > 1 && array[5] === true) {
+        trueCount++;
+    }
+    }
+
+
+
+
+
     console.log(results_array)
+    table = createTable(results_array)
+    document.body.appendChild(table);
+
+    console.log(trueCount)
+
+
+
+
+    const newDiv = document.createElement("div");
+
+// Step 2: Optionally, set attributes or properties for the new <div>
+newDiv.id = "myDiv"; // Set the ID attribute, if needed
+newDiv.textContent = `${trueCount}/${num_questions}`; // Set the text content
+newDiv.style.fontSize = "60px"; // You can specify the desired font size here
+newDiv.style.display = "flex"; // You can specify the desired font size here
+newDiv.style.justifyContent = "center"; // You can specify the desired font size here
+
+// Step 3: Append the <div> to the <body>
+document.body.appendChild(newDiv);
+
 }
 
 function waitForSubmit() {
     return new Promise(resolve => {
         submit.addEventListener("click", function handleSubmission() {
             submit.removeEventListener("click", handleSubmission); // Remove the event listener after it's triggered
-            const resultArray = [operand_sign.textContent, first.textContent, second.textContent, answer, inputElement.value];
+            const resultArray = [operand_, first.textContent, second.textContent, answer, inputElement.value, answer.toString() === inputElement.value];
             resolve(resultArray);
         });
     });
@@ -406,14 +498,20 @@ if (!isNaN(integerValue)) {
 
 
 add_sub_value = getValue()
+if (add_sub_value === "add") {
+    operand = "+"
+}
+else{
+    operand = "-"
 
+}
 
 if (integerValue === false || add_sub_value===false) {
     console.log("error")
 }
 else{
     console.log(add_sub_value, integerValue)
-    make_a_test_func(integerValue, add_sub_value)
+    make_a_test_func(integerValue, add_sub_value, 1, 0)
 
 }
 
@@ -425,6 +523,15 @@ else{
 
 });
 
+
+
+var savedtest = localStorage.getItem('test');
+savedtest = JSON.parse(savedtest)
+console.log(savedtest["operand"])
+index_new = Object.keys( savedtest["result"]).length
+if (index_new < savedtest["questions"]) {
+    make_a_test_func(savedtest["questions"], savedtest["operand"], index_new, savedtest)
+}
 
 </script>
 </body>
