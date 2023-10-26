@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #choose{
+            display: flex;
+            justify-content: center;
+
+            align-items: center;
+            /* padding: 10px; */
+            width: 100%;
+            text-align: center;
+        }
+
+        #add, #sub {
+            display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  width: 100px;
+  border: 3px solid green;
+  margin: 10px;
+
+        }
+
+
+        #main-content, #test-maker{
+            margin-top: 20px;
+  display: flex;
+  flex-direction: column; /* Set flex-direction to column */
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  text-align: center;
+        }
+        #calc{
+            border: 2px black solid;
+            display: flex;
+            justify-content: center;
+
+        }
+
+        #test-builder{
+            border: 2px black solid;
+            display: flex;
+            width: 200px;
+            justify-content: center;
+        }
+        #test-previous{
+            border: 2px black solid;
+            display: flex;
+            width: 200px;
+            justify-content: center;
+        }
+        #test-delete{
+            border: 2px black solid;
+            display: block;
+            padding: 10px;
+            width: 240px;
+            /* justify-content: center; */
+        }
+
+        #result{
+            margin-top: 20px;
+            width: 100px;
+            border: 2px black solid;
+            display: flex;
+            justify-content: center;
+
+        }
+        #answer{
+            margin-top: 20px;
+            width: 200px;
+            display: flex;
+            justify-content: center;
+
+        }
+        #first, #second, #operand {
+            font-size: 30px;
+            font-weight: 900;
+            display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  width: 100px;
+  border: 3px solid green;
+  margin: 10px;
+
+        }
+        #operand{
+            border: 0;
+            width: 30px;
+        }
+        #incorrect{
+            width: 100px;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="choose">
+        <div id="add"><a id="add-link" href="">Addition</a></div>
+        <div id="sub"><a id="sub-link" href="">Subtraction</a></div>
+    </div>
+    <div id="main-content">
+        <div id="calc">
+            <div id="first">
+                1
+            </div>
+            <div id="operand">
+                +
+            </div>
+            <div id="second">
+                2
+            </div>
+
+
+        </div>
+        <div id="answer">
+            <input id="myInput" type="text" placeholder="answer" autocomplete="off">
+            <button id="submit">submit</button>
+        </div>
+        <div id="result">
+            result
+
+        </div>
+        <div id="image-incorrect">
+            <img src="incorrect.png" alt="" id="incorrect">
+
+        </div>
+        <div id="image-correct">
+            <img src="correct.png" alt="" id="incorrect">
+
+        </div>
+
+    </div>
+    <div id="test-maker">
+        <a href="" id="make-test">make a test </a>
+        <a href="" id="previous-test">start a previous test </a>
+        <a href="" id="delete-test">delete previous test? </a>
+        <div id="test-builder">
+            <p>number of questions? </p> 
+            <input id="num-questions" type="text">
+            <p>Addition or subtraction</p> 
+            <div>
+                <label>
+                    <input type="radio" name="calc" value="add"> add
+                </label>
+        
+                <label>
+                    <input type="radio" name="calc" value="sub"> sub
+                </label>
+            </div>
+            <p>start test? </p> 
+
+            <button id="start-test-button">yes</button>
+
+        </div>
+        <div id="test-previous">
+
+        </div>
+        <div id="test-delete">
+            are you sure you want to delete all the previous tests?
+            <div>
+                <button id="yes-delete">yes</button>
+                <button id="no-delete">no</button>
+            </div>
+        </div>
+        <div id="counter"></div>
+    </div>
+
+    <script>
+        // Get a reference to the link element using its ID
+        const add_link = document.getElementById("add-link");
+        const sub_link = document.getElementById("sub-link");
+        const operand_sign = document.getElementById("operand");
+const inputElement = document.getElementById("myInput");
+const main_content = document.getElementById("main-content");
+const first = document.getElementById("first");
+const second = document.getElementById("second");
+const result = document.getElementById("result");
+const submit = document.getElementById("submit");
+const image_incorrect = document.getElementById("image-incorrect");
+const image_correct = document.getElementById("image-correct");
+
+
+
+inputElement.addEventListener("keydown", function (event) {
+  if (event.key === "Enter" && !submit.disabled) {
+    // Trigger the submit button's click event when Enter is pressed and the button is not disabled
+    submit.click();
+  }
+});
+
+
+
+function getRandomNumber() {
+  return Math.floor(Math.random() * 100);
+}
+
+function resetUI(operand) {
+  inputElement.value = "";
+  operand_sign.textContent = operand
+  main_content.style.display = "flex";
+  const numbers = [getRandomNumber(), getRandomNumber()];
+  first.textContent = numbers[0];
+  second.textContent = numbers[1];
+  result.style.display = "none";
+  image_incorrect.style.display = "none";
+  image_correct.style.display = "none";
+
+  if (operand === "+") {
+    answer = numbers[0] + numbers[1]
+  }
+  else{
+    answer = numbers[0] - numbers[1]
+  }
+  result.textContent = answer;
+  submit.disabled = false;
+}
+
+function handleSubmission() {
+  image_incorrect.style.display = "none";
+  image_correct.style.display = "none";
+  result.style.display = "flex";
+  const inputValue = inputElement.value;
+
+  if (inputValue === answer.toString()) {
+    image_correct.style.display = "flex";
+  } else {
+    image_incorrect.style.display = "flex";
+  }
+
+  submit.disabled = true;
+}
+
+main_content.style.display = "none";
+
+add_link.addEventListener("click", function (event) {
+  event.preventDefault();
+  resetUI("+");
+});
+sub_link.addEventListener("click", function (event) {
+  event.preventDefault();
+  resetUI("-");
+});
+
+submit.addEventListener("click", handleSubmission);
+
+
+
+    </script>
+
+<script>
+    // localStorage.setItem('username', 'JohnDoe');
+console.log(localStorage)
+make_test_link = document.getElementById("make-test")
+previous_test_link = document.getElementById("previous-test")
+delete_test_link = document.getElementById("delete-test")
+
+make_test = document.getElementById("test-builder")
+previous_test = document.getElementById("test-previous")
+delete_test = document.getElementById("test-delete")
+
+
+// Get the value entered by the user
+
+
+
+make_test.style.display = "none"
+previous_test.style.display = "none"
+delete_test.style.display = "none"
+
+delete_test_link.addEventListener("click", function (event) {
+event.preventDefault();
+delete_test.style.display = "block"
+yes_delete = document.getElementById("yes-delete")
+no_delete = document.getElementById("no-delete")
+
+
+yes_delete.addEventListener("click", function (event) {
+    localStorage.clear(); // Remove all data for your web application
+    delete_test.style.display = "none"
+
+});
+no_delete.addEventListener("click", function (event) {
+    delete_test.style.display = "none"
+
+});
+});
+
+function getValue() {
+        // Get all radio buttons with the name "calc"
+        var radioButtons = document.getElementsByName("calc");
+
+        // Initialize a variable to store the selected value
+        var selectedValue = "";
+
+        // Loop through the radio buttons to find the selected one
+        for (var i = 0; i < radioButtons.length; i++) {
+            if (radioButtons[i].checked) {
+                selectedValue = radioButtons[i].value;
+                break; // Exit the loop once a selection is found
+            }
+        }
+
+        // Display the selected value (you can also use it for further processing)
+        if (selectedValue) {
+            return selectedValue
+        } else {
+            alert("Add or sub not selected");
+            return false
+        }
+    }
+
+function make_a_test_func(num_questions_, operand_) {
+    counter = document.getElementById("counter")
+
+console.log(localStorage)
+const myArray = { "questions":num_questions_, "operand": operand_, "result":{}};
+
+localStorage.setItem(`test`, JSON.stringify(myArray));
+
+const storedArray = JSON.parse(localStorage.getItem('myArray'));
+
+console.log(localStorage)
+
+
+// starting the test
+
+
+if (operand_ === "add") {
+    sub_link.style.display = "none"
+}
+else{
+    add_link.style.display = "none"
+
+}
+
+for (let index = 1; index <= num_questions_; index++) {
+    counter.textContent = index
+    resetUI("+")    
+}
+
+
+
+
+}   
+
+make_test_link.addEventListener("click", function (event) {
+event.preventDefault();
+make_test.style.display = "block"
+num_questions =  document.getElementById("num-questions")
+const start_test_button = document.getElementById("start-test-button")
+
+
+start_test_button.addEventListener("click", function (event) {
+const enteredValue = num_questions.value;
+let integerValue = parseInt(enteredValue);
+
+
+if (!isNaN(integerValue)) {
+            // Display the parsed integer value
+        } else {
+            alert("Not a valid integer.");
+            integerValue = false
+        }
+
+
+add_sub_value = getValue()
+
+
+if (integerValue === false || add_sub_value===false) {
+    console.log("error")
+}
+else{
+    console.log(add_sub_value, integerValue)
+    make_a_test_func(integerValue, add_sub_value)
+
+}
+
+
+
+
+
+});
+
+});
+
+
+</script>
+</body>
+</html>
